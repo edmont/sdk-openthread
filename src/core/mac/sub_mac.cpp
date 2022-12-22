@@ -1150,6 +1150,7 @@ void SubMac::GetCslWindowEdges(uint32_t &aAhead, uint32_t &aAfter)
         static_cast<uint32_t>(static_cast<uint64_t>(elapsed) *
                               (Get<Radio>().GetCslAccuracy() + mCslParentAccuracy.GetClockAccuracy()) / 1000000);
     semiWindow += mCslParentAccuracy.GetUncertaintyInMicrosec();
+    semiWindow += 5000;
 
     aAhead = (semiWindow + kCslReceiveTimeAhead > semiPeriod) ? semiPeriod : semiWindow + kCslReceiveTimeAhead;
     aAfter = (semiWindow + kMinCslWindow > semiPeriod) ? semiPeriod : semiWindow + kMinCslWindow;
