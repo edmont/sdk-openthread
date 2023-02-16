@@ -1113,7 +1113,7 @@ void SubMac::HandleCslTimer(void)
         }
         else
         {
-            mCslTimer.FireAt(mCslSampleTime + timeAfter);
+            mCslTimer.FireAt(mCslSampleTime + timeAfter - kRadioHeaderDuration);
             mIsCslSampling = true;
             mCslSampleTime += periodUs;
         }
@@ -1122,7 +1122,8 @@ void SubMac::HandleCslTimer(void)
 
         if (RadioSupportsReceiveTiming() && (mState != kStateDisabled))
         {
-            IgnoreError(Get<Radio>().ReceiveAt(mCslChannel, mCslSampleTime.GetValue() - periodUs - timeAhead,
+            IgnoreError(Get<Radio>().ReceiveAt(mCslChannel,
+                                               mCslSampleTime.GetValue() - periodUs - timeAhead - kRadioHeaderDuration,
                                                timeAhead + timeAfter));
         }
         else if (mState == kStateCslSample)
@@ -1146,10 +1147,10 @@ void SubMac::GetCslWindowEdges(uint32_t &aAhead, uint32_t &aAfter)
     semiWindow =
         static_cast<uint32_t>(static_cast<uint64_t>(elapsed) *
                               (Get<Radio>().GetCslAccuracy() + mCslParentAccuracy.GetClockAccuracy()) / 1000000);
-    semiWindow += mCslParentAccuracy.GetUncertaintyInMicrosec();
+    semiWindow += mCslParentAccuracy.GetUncertaintyInMicrosec() + Get<Radio>().GetCslUncertainty() * 10;
 
-    aAhead = (semiWindow + kCslReceiveTimeAhead > semiPeriod) ? semiPeriod : semiWindow + kCslReceiveTimeAhead;
-    aAfter = (semiWindow + kMinCslWindow > semiPeriod) ? semiPeriod : semiWindow + kMinCslWindow;
+    aAhead = Min(semiPeriod, semiWindow + kCslReceiveTimeAhead);
+    aAfter = Min(semiPeriod, semiWindow + kMinCslWindow);
 }
 #endif // OPENTHREAD_CONFIG_MAC_CSL_RECEIVER_ENABLE
 

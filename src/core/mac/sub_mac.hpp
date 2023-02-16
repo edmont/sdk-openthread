@@ -656,6 +656,9 @@ private:
     CslAccuracy mCslParentAccuracy; // The parent's CSL accuracy (clock accuracy and uncertainty).
     TimerMicro  mCslTimer;
 #endif
+
+    static_assert(OPENTHREAD_CONFIG_MAC_CSL_REQUEST_AHEAD_US >= kRadioHeaderDuration,
+                  "OPENTHREAD_CONFIG_MAC_CSL_REQUEST_AHEAD_US should be greater than radio header duration.");
 };
 
 /**

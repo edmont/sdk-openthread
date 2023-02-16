@@ -46,6 +46,7 @@
 namespace ot {
 
 static constexpr uint32_t kUsPerTenSymbols = OT_US_PER_TEN_SYMBOLS; ///< Time for 10 symbols in units of microseconds
+static constexpr uint32_t kRadioHeaderDuration = 192;               ///< Duration of SHR + PHR in us
 
 #if OPENTHREAD_CONFIG_MAC_CSL_RECEIVER_ENABLE
 /**
@@ -769,9 +770,7 @@ inline Error Radio::EnableCsl(uint32_t aCslPeriod, otShortAddress aShortAddr, co
 
 #if OPENTHREAD_CONFIG_MAC_CSL_RECEIVER_ENABLE || OPENTHREAD_CONFIG_MAC_CSL_TRANSMITTER_ENABLE
 inline uint8_t Radio::GetCslAccuracy(void) { return otPlatRadioGetCslAccuracy(GetInstancePtr()); }
-#endif
 
-#if OPENTHREAD_CONFIG_MAC_CSL_TRANSMITTER_ENABLE
 inline uint8_t Radio::GetCslUncertainty(void) { return otPlatRadioGetCslUncertainty(GetInstancePtr()); }
 #endif
 

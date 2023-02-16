@@ -1079,7 +1079,7 @@ void otPlatRadioUpdateCslSampleTime(otInstance *aInstance, uint32_t aCslSampleTi
 uint8_t otPlatRadioGetCslAccuracy(otInstance *aInstance);
 
 /**
- * The fixed uncertainty of the Device for scheduling CSL Transmissions in units of 10 microseconds.
+ * The fixed uncertainty of the Device for scheduling CSL operations in units of 10 microseconds.
  *
  * @param[in]   aInstance    A pointer to an OpenThread instance.
  *
