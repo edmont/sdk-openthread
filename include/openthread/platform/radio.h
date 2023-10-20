@@ -119,7 +119,7 @@ enum
  * The value is a bit-field indicating the capabilities supported by the radio. See `OT_RADIO_CAPS_*` definitions.
  *
  */
-typedef uint8_t otRadioCaps;
+typedef uint16_t otRadioCaps;
 
 /**
  * Defines constants that are used to indicate different radio capabilities. See `otRadioCaps`.
@@ -136,6 +136,7 @@ enum
     OT_RADIO_CAPS_TRANSMIT_SEC     = 1 << 5, ///< Radio supports tx security.
     OT_RADIO_CAPS_TRANSMIT_TIMING  = 1 << 6, ///< Radio supports tx at specific time.
     OT_RADIO_CAPS_RECEIVE_TIMING   = 1 << 7, ///< Radio supports rx at specific time.
+    OT_RADIO_CAPS_RX_ON_WHEN_IDLE  = 1 << 8, ///< Radio supports RxOnWhenIdle handling.
 };
 
 #define OT_PANID_BROADCAST 0xffff ///< IEEE 802.15.4 Broadcast PAN ID
@@ -620,6 +621,15 @@ bool otPlatRadioGetPromiscuous(otInstance *aInstance);
  *
  */
 void otPlatRadioSetPromiscuous(otInstance *aInstance, bool aEnable);
+
+/**
+ * Indicates whether radio should stay in Receive or Sleep state during idle periods.
+ *
+ * @param[in]  aInstance    The OpenThread instance structure.
+ * @param[in]  aEnable      TRUE to keep radio in Receive state, FALSE to put to Sleep state during idle periods.
+ *
+ */
+void otPlatRadioSetRxOnWhenIdle(otInstance *aInstance, bool aEnable);
 
 /**
  * Update MAC keys and key index

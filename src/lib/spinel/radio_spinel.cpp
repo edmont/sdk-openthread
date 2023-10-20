@@ -866,6 +866,11 @@ exit:
     return error;
 }
 
+otError RadioSpinel::SetRxOnWhenIdle(bool aEnable)
+{
+    return Set(SPINEL_PROP_MAC_RX_ON_WHEN_IDLE_MODE, SPINEL_DATATYPE_BOOL_S, aEnable);
+}
+
 otError RadioSpinel::SetShortAddress(uint16_t aAddress)
 {
     otError error = OT_ERROR_NONE;

@@ -104,6 +104,18 @@ public:
     otError SetPromiscuous(bool aEnable);
 
     /**
+     * Sets the status of RxOnWhenIdle mode.
+     *
+     * @param[in]   aEnable     Whether to enable or disable RxOnWhenIdle mode.
+     *
+     * @retval  OT_ERROR_NONE               Succeeded.
+     * @retval  OT_ERROR_BUSY               Failed due to another operation is on going.
+     * @retval  OT_ERROR_RESPONSE_TIMEOUT   Failed due to no response received from the transceiver.
+     *
+     */
+    otError SetRxOnWhenIdle(bool aEnable);
+
+    /**
      * Sets the Short Address for address filtering.
      *
      * @param[in] aShortAddress  The IEEE 802.15.4 Short Address.
