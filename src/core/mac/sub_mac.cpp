@@ -373,7 +373,7 @@ void SubMac::HandleReceiveDone(RxFrame *aFrame, Error aError)
         // Assuming the risk of the parent missing the Enh-ACK in favor of smaller CSL receive window
         if ((mCslPeriod > 0) && aFrame->mInfo.mRxInfo.mAckedWithSecEnhAck)
         {
-            mCslLastSync = TimeMicro(static_cast<uint32_t>(aFrame->mInfo.mRxInfo.mTimestamp));
+            mCslLastSync = ot::TimerMicro::GetNow();
         }
     }
 #endif // OPENTHREAD_CONFIG_MAC_CSL_RECEIVER_ENABLE
@@ -632,11 +632,11 @@ void SubMac::HandleTransmitDone(TxFrame &aFrame, RxFrame *aAckFrame, Error aErro
             mCallbacks.RecordCcaStatus(ccaSuccess, aFrame.GetChannel());
         }
 #if OPENTHREAD_CONFIG_MAC_CSL_RECEIVER_ENABLE
-        // Actual synchronization timestamp should be from the sent frame instead of the current time.
+        // Actual synchronization timestamp should be from the sent frame instead of the current local time.
         // Assuming the error here since it is bounded and has very small effect on the final window duration.
-        if (mCslPeriod > 0)
+        if (aAckFrame != nullptr && aFrame.GetHeaderIe(CslIe::kHeaderIeId) != nullptr)
         {
-            mCslLastSync = TimeMicro(static_cast<uint32_t>(otPlatRadioGetNow(&GetInstance())));
+            mCslLastSync = ot::TimerMicro::GetNow();
         }
 #endif
         break;
@@ -1254,12 +1254,9 @@ void SubMac::HandleCslTimer(void)
 
 void SubMac::GetCslWindowEdges(uint32_t &aAhead, uint32_t &aAfter)
 {
+    uint32_t elapsed    = ot::TimerMicro::GetNow() - mCslLastSync;
     uint32_t semiPeriod = mCslPeriod * kUsPerTenSymbols / 2;
-    uint32_t curTime    = static_cast<uint32_t>(otPlatRadioGetNow(&GetInstance()));
-    uint32_t elapsed;
     uint32_t semiWindow;
-
-    elapsed = curTime - mCslLastSync.GetValue();
 
     semiWindow =
         static_cast<uint32_t>(static_cast<uint64_t>(elapsed) *
