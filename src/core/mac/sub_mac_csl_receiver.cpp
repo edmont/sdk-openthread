@@ -252,7 +252,7 @@ uint32_t SubMac::GetLocalTime(void)
 #if OPENTHREAD_CONFIG_MAC_CSL_RECEIVER_LOCAL_TIME_SYNC
     now = TimerMicro::GetNow().GetValue();
 #else
-    now = static_cast<uint32_t>(Get<Radio>().GetNow());
+    now = static_cast<uint32_t>(otPlatRadioGetNow(&GetInstance()));
 #endif
 
     return now;
